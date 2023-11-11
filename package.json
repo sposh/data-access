@@ -1,0 +1,21 @@
+{
+    "name": "@sposh/data-access",
+    "version": "1.0.0",
+    "description": "DAO/DTO pattern library for agnostic data access.",
+    "keywords": ["data access", "fetch", "web socket"],
+    "homepage": "https://github.com/sposh/data-access/wiki",
+    "bugs": "https://github.com/sposh/data-access/issues",
+    "license": "GPL-3.0-only",
+    "author": "Joshua Hewitt aka Sposh",
+    "main": "index.js",
+    "repository": "github:sposh/data-access",
+    "scripts": {},
+    "config": {
+        "engine-strict": true
+    },
+    "dependencies": {},
+    "devDependencies": {},
+    "engines": {
+        "node": ">=16"
+    }
+  }
