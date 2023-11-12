@@ -1,6 +1,6 @@
-import FetchChannel from "../src/FetchChannel";
+import FetchChannel from '../src/FetchChannel';
 
-// TODO Use mock responses
+// FIXME Use mock responses
 
 test('Basic FetchChannel', async () => {
     const channel1 = new FetchChannel();
