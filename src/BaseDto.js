@@ -32,7 +32,7 @@ export default class BaseDto {
 /**
  * Mixin to generate class of a collection of data transfer objects.
  */
-export function collectionDtoMixin(dtoClass = BaseDto) {
+export function collectionDtoMixin(dtoClass = BaseDto) { // TODO Tests
     return class CollectionDto extends BaseDto {
         #dtoClass;
         #elements;

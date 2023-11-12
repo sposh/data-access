@@ -1,4 +1,27 @@
-// TODO JSDoc
+import logger from 'winston';
+
+// TODO JSDoc & tests
+
+/**
+ * Default unimplemented method for "abstract" classes and interfaces.
+ */
+export const abstractMethod = function(name) {
+    throw Error(`unimplemented abstract method${name ? ` ${name}` : ''}`);
+};
+
+/**
+ * Create an instance from a prototype or a class
+ */
+export function createInstance(prototype, ...params) { // TODO Test if this still works after Babel transpilation
+    if (typeof prototype === 'function' && typeof prototype.constructor === 'function' && typeof prototype.prototype === 'object') {
+        logger.debug(`utils.oop createInstance of ${prototype.name} with new`);
+        return new prototype(...params);
+    } else if (prototype !== null && typeof prototype === 'object' && typeof prototype.constructor === 'function' && typeof prototype.__proto__ === 'object') {
+        logger.debug('utils.oop createInstance with Object.create');
+        return Object.create(prototype, params);
+    }
+    logger.warn('utils.oop createInstance undefined');
+}
 
 function getAllNamesByDescriptorFilter(instance, descriptorFilter) {
     const properties = [];
@@ -58,4 +81,46 @@ export function getAllFunctionNames(instance) {
         jsonString = '}';
     }
     return `${instance.constructor.name}{${gettersString}${jsonString}`;
+}
+
+// Deprecated
+function createExternallyResolvablePromiseOld() {
+    let _doResolve;
+    const promise = new Promise((resolve, reject) => {
+        try {
+            _doResolve = data => {_doResolve = null; return resolve(data);};
+        } catch (error) {
+            reject(error);
+        }
+    });
+    promise.doResolve = function (resolveData = null) {
+        if (_doResolve === null) {
+            logger.warn('doResolve already called for this Promise', promise);
+            return promise.then(() => new Error('doResolve already called for this Promise'));
+        } else {
+            _doResolve(resolveData);
+        }
+        return promise.then(() => resolveData);
+    };
+    // Caution: can only call doResolve on original Promise, not on the copies returned by then/catch/finally (unless we uncomment the next line)
+    // ['then', 'catch', 'finally'].forEach((method) => {addAttributeToAttributeReturn(promise, method, 'doResolve');}); // TODO propagate "already called" changes through promise chain
+    return promise;
+}
+
+export function createExternallyResolvablePromise() {
+    let resolver;
+    const promise = new Promise(function (resolve) { // TODO handle reject
+        resolver = function (data) {
+            resolve(data);
+            promise.doResolve = function () {
+                logger.warn('Resolver already called for this Promise');
+                return promise;
+            }
+            return promise;
+        }
+    });
+    promise.doResolve = resolver;
+    // Caution: can only call doResolve on original Promise, not on the copies returned by then/catch/finally (unless we uncomment the next line)
+    // ['then', 'catch', 'finally'].forEach((method) => {addAttributeToAttributeReturn(promise, method, 'doResolve');}); // TODO propagate "already called" changes through promise chain
+    return promise;
 }
