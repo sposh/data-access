@@ -7,27 +7,29 @@ import DataStream from './DataStream';
  * @interface
  */
 export default class BaseChannel { // TODO Change to CQRS with event sourcing for DDD & event-driven architecture; port/adapter?
-    #dataStream;
-
-    constructor() {
-        let refresh, end;
-        this.#dataStream = new DataStream(refreshSetup => refresh = refreshSetup, endSetup => end = endSetup);
-        this.#dataStream.refresh = refresh;
-        this.#dataStream.end = end;
+    static get actions() {
+        return {};
     }
 
-    getDataStream() {
-        return this.#dataStream; // FIXME Recipients should not be able to refresh/end
+    #dataStream;
+    #refresh;
+    #end;
+
+    constructor() {
+        this.#dataStream = new DataStream(refreshSetup => this.#refresh = refreshSetup, endSetup => this.#end = endSetup);
+    }
+
+    get dataStream() {
+        return this.#dataStream;
     }
 
     _update(data) { // TODO JSDoc
         if (data !== undefined) {
-            this.#dataStream.refresh(data);
+            this.#refresh(data);
         }
-        return this.#dataStream;
     }
 
     _close() { // TODO JSDoc
-        this.#dataStream.end();
+        this.#end();
     }
 }

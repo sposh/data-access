@@ -76,11 +76,11 @@ export function getAllFunctionNames(instance) {
         gettersString = gettersString.substring(0, gettersString.length - 2);
     }
     if (jsonString) {
-        jsonString = jsonString.substring(1);
+        jsonString = jsonString.substring(1, jsonString.length - 1);
     } else {
-        jsonString = '}';
+        jsonString = ' }';
     }
-    return `${instance.constructor.name}{${gettersString}${jsonString}`;
+    return `${instance.constructor.name}{ ${gettersString}${jsonString} }`;
 }
 
 // Deprecated

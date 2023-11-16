@@ -2,13 +2,13 @@ import BaseDto from '../src/BaseDto';
 
 test('Basic BaseDto', () => {
     const baseDto = new BaseDto();
-    expect(baseDto.toString()).toBe('BaseDto{}');
+    expect(baseDto.toString()).toBe('BaseDto{  }');
     expect(baseDto._params).toEqual([]);
 });
 
 test('BaseDto with params', () => {
     const baseDto = new BaseDto('a', 'b');
-    expect(baseDto.toString()).toBe('BaseDto{}');
+    expect(baseDto.toString()).toBe('BaseDto{  }');
     expect(baseDto._params).toEqual(['a', 'b']);
 });
 
@@ -33,7 +33,7 @@ test('Extending BaseDto', () => {
             return this.toInmutable(this.#one);
         }
     }(1);
-    expect(extendedDto.toString()).toBe('ExtendedDto{one: 1}');
+    expect(extendedDto.toString()).toBe('ExtendedDto{ one: 1 }');
     expect(extendedDto.one).toBe(1);
     expect(extendedDto._params).toEqual([1]);
 });

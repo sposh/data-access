@@ -3,6 +3,31 @@ import { createExternallyResolvablePromise } from './utils'
 // TODO JSDoc & more tests
 
 export default class DataStream {
+    static joinDataStreams(dataStreams, joinDataFunction, refresh, end) { // TODO Tests
+        const joinedReply = new DataStream(refreshSetup => refresh = refreshSetup, endSetup => end = endSetup);
+        Object.defineProperty(joinedReply, 'last', {
+            get() {
+                return joinDataFunction(dataStreams.map(dataStreams => dataStreams.last));
+            },
+        });
+        Object.defineProperty(joinedReply, 'current', {
+            get() {
+                const doEnd = false;
+                return Promise.all(dataStreams.map(dataStream => {
+                    const current = dataStream.current;
+                    if (current === null) {
+                        doEnd = true;
+                    }
+                    if (doEnd) {
+                        end();
+                    }
+                    return current;
+                }));
+            },
+        });
+        return joinedReply;
+    }
+
     #last;
     #current = createExternallyResolvablePromise();
 
@@ -13,24 +38,24 @@ export default class DataStream {
     }
 
     async *[Symbol.asyncIterator]() {
-        yield this.last;
-        while (this.current) {
-            await this.current;
-            yield this.last;
+        yield this.#last;
+        while (this.#current) {
+            await this.#current;
+            yield this.#last;
         }
         yield null;
     }
 
     get last() {
-        return this.#last; // TODO Inmutable
+        return this.#last; // TODO Inmutable/copy?
     }
 
     get current() {
-        return this.#current ? this.#current.then() : this.#current;
+        return this.#current ? this.#current.then() : this.#current; // TODO Inmutable/copy?
     }
 
     #refresh(data) {
-        if (this.current) {
+        if (this.#current) {
             this.#last = data;
             this.#current.doResolve(this.#last);
             this.#current = createExternallyResolvablePromise();
@@ -44,29 +69,4 @@ export default class DataStream {
     toString() {
         return `${this.constructor.name}{ last: ${this.last}, current: ${this.current} }`;
     }
-}
-
-export function joinDataStreams(dataStreams, joinDataFunction, refresh, end) { // TODO Tests
-    const joinedReply = new DataStream(refreshSetup => refresh = refreshSetup, endSetup => end = endSetup);
-    Object.defineProperty(joinedReply, 'last', {
-        get() {
-            return joinDataFunction(dataStreams.map(dataStreams => dataStreams.last));
-        },
-    });
-    Object.defineProperty(joinedReply, 'current', {
-        get() {
-            const doEnd = false;
-            return Promise.all(dataStreams.map(dataStream => {
-                const current = dataStream.current;
-                if (current === null) {
-                    doEnd = true;
-                }
-                if (doEnd) {
-                    end();
-                }
-                return current;
-            }));
-        },
-    });
-    return joinedReply;
 }

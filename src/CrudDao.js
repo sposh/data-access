@@ -15,9 +15,9 @@ export default class CrudDao extends BaseDao {
      * @param {*} [value] The new object to create (optional)
      * @return {*} The created object, or `undefined` if object is not created
      */
-    create(key, context, value) {
-        abstractMethod(`CrudDao.${[methods.CREATE]}`, key, context, this.dtoToData(value));
-        return this.getDataStream();
+    create(key, context, dto) {
+        abstractMethod(`CrudDao.${[methods.CREATE]}`, key, context, this.dtoToData(dto));
+        return this.dataStream;
     }
 
     /**
@@ -30,7 +30,7 @@ export default class CrudDao extends BaseDao {
      */
     read(key, context) {
         abstractMethod(`CrudDao.${[methods.READ]}`, key, context);
-        return this.getDataStream();
+        return this.dataStream;
     }
 
     /**
@@ -42,9 +42,9 @@ export default class CrudDao extends BaseDao {
      * @param {*} value The new object (optional)
      * @return {*} The modified object, or `undefined` if object is not found
      */
-    update(key, context, value) {
-        abstractMethod(`CrudDao.${[methods.UPDATE]}`, key, context, this.dtoToData(value));
-        return this.getDataStream();
+    update(key, context, dto) {
+        abstractMethod(`CrudDao.${[methods.UPDATE]}`, key, context, this.dtoToData(dto));
+        return this.dataStream;
     }
 
     /**
@@ -57,7 +57,7 @@ export default class CrudDao extends BaseDao {
      */
     delete(key, context) {
         abstractMethod(`CrudDao.${[methods.DELETE]}`, key, context);
-        return this.getDataStream();
+        return this.dataStream;
     }
 }
 

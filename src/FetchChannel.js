@@ -11,6 +11,10 @@ import BaseChannel from './BaseChannel.js';
  * @implements CrudChannel
  */
 export default class FetchChannel extends BaseChannel {
+    static get actions() {
+        return { POST: 'post', GET: 'get', PUT: 'put', DELETE: 'delete' };
+    }
+
     /**
      * Perform a POST request to a HTTP[S] endpoint.
      * @abstract
@@ -22,7 +26,6 @@ export default class FetchChannel extends BaseChannel {
     post(url, init, value) {
         logger.http(`post ${url}`);
         handleData(fetch(url, { method: 'POST', body: value, ...init })).then(data => this._update(data));
-        return this.getDataStream();
     }
 
     /**
@@ -35,7 +38,6 @@ export default class FetchChannel extends BaseChannel {
     get(url, init) {
         logger.http(`get ${url}`);
         handleData(fetch(url, { method: 'GET', ...init })).then(data => this._update(data));
-        return this.getDataStream();
     }
 
     /**
@@ -49,7 +51,6 @@ export default class FetchChannel extends BaseChannel {
     put(url, init, value) {
         logger.http(`put ${url}`);
         handleData(fetch(url, { method: 'PUT', body: value, ...init })).then(data => this._update(data));
-        return this.getDataStream();
     }
 
     /**
@@ -62,7 +63,6 @@ export default class FetchChannel extends BaseChannel {
     delete(url, init) {
         logger.http(`delete ${url}`);
         handleData(fetch(url, { method: 'DELETE', ...init })).then(data => this._update(data));
-        return this.getDataStream();
     }
 }
 
