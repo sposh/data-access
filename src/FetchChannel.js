@@ -2,7 +2,6 @@ import logger from 'winston';
 import fetch from 'node-fetch';
 import BaseChannel from './BaseChannel.js';
 
-// FIXME Logs binance signature
 // TODO More tests, check JSDocs
 
 /**

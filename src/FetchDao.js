@@ -1,7 +1,7 @@
 import CrudDao from './CrudDao';
 import FetchChannel from './FetchChannel';
 
-// TODO More tests, check JSDocs
+// TODO Tests, check JSDocs
 
 /**
  * Data connector object for HTTP[S] fetch.
