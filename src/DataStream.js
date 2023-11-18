@@ -38,26 +38,24 @@ export default class DataStream {
     }
 
     async *[Symbol.asyncIterator]() {
-        yield this.#last;
         while (this.#current) {
             await this.#current;
-            yield this.#last;
+            yield this.last;
         }
-        yield null;
     }
 
     get last() {
-        return this.#last; // TODO Inmutable/copy?
+        return this.#last; // TODO Ensure inmutability
     }
 
     get current() {
-        return this.#current ? this.#current.then() : this.#current; // TODO Inmutable/copy?
+        return this.#current ? this.#current.then() : this.#current; // Ensure inmutability
     }
 
     #refresh(data) {
         if (this.#current) {
             this.#last = data;
-            this.#current.doResolve(this.#last);
+            this.#current.doResolve(this.last);
             this.#current = createExternallyResolvablePromise();
         }
     }

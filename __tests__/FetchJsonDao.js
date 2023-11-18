@@ -7,11 +7,9 @@ import FetchJsonDao from '../src/FetchJsonDao';
 test('Basic FetchJsonDao', async () => {
     // mockId(696815904);
     const dao1 = new FetchJsonDao();
-    expect(await dao1.dataStream.current).toBe(undefined);
     dao1.read('https://api.github.com/users/sposh/repos');
     expect((await dao1.dataStream.current)._params[0][0].id).toBe(696815904);
     const dao2 = new FetchJsonDao();
-    expect(await dao2.dataStream.current).toBe(undefined);
     dao2.read('https://api.github.com/users/sposh/repos');
     expect((await dao2.dataStream.current)._params[0][0].id).toBe(696815904);
     // mockId(112634155);

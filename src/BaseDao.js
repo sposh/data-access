@@ -1,9 +1,9 @@
 import BaseDto from './BaseDto';
 import BaseChannel from './BaseChannel';
+import DataStream from './DataStream';
 import { createInstance } from './utils';
-import DataStream from './DataStream'
 
-// TODO Tests
+// TODO More tests, JSDoc
 
 /**
  * Base data access object.
@@ -16,10 +16,17 @@ export default class BaseDao {
     constructor(dtoClass = BaseDto, channelClass = BaseChannel, ...params) {
         this.#dtoClass = dtoClass;
         this.#channel = createInstance(channelClass, ...params);
-        let refresh;
-        this.#dataStream = new DataStream(refreshSetup => refresh = refreshSetup);
+        /* this.#dataStream = this.#channel.dataStream;
+        const newLast = () => this.dataToDto(this.#channel.dataStream.last);
+        Object.defineProperty(this.#dataStream, 'last', {
+            get() {
+                return newLast();
+            },
+        }); */
+        let refresh, end;
+        this.#dataStream = new DataStream(refreshSetup => refresh = refreshSetup, endSetup => end = endSetup);
         (async () => {
-            for await (const data of this.#channel.dataStream) { // FIXME Don't refresh if undefined? And null?
+            for await (const data of this.#channel.dataStream) {
                 refresh(this.dataToDto(data));
             }
         })();

@@ -5,13 +5,15 @@ import BaseDto from '../src/BaseDto';
 test('BaseDao.dataStream', async () => {
     class ChannelClass extends BaseChannel {
         static get actions() {
-            return { UPDATE: 'update' };
+            return { UPDATE: 'update', CLOSE: 'close' };
         }
         update(data) {
             this._update(data);
         }
+        close() {
+            this._close();
+        }
     };
-    const channel = new ChannelClass();
     class DtoClass extends BaseDto {
         #value;
         constructor(value) {
@@ -31,13 +33,18 @@ test('BaseDao.dataStream', async () => {
         }
         update(dto) {
             this.getChannelAction('UPDATE')(this.dtoToData(dto));
-            return this.dataStream;
+        }
+        close() {
+            this.getChannelAction('CLOSE')();
         }
     })();
-    expect(await (dao.dataStream.current)).toBe(undefined);
     expect(dao.dataStream.last).toBe(undefined);
     const dto = new DtoClass('i');
+    const current = dao.dataStream.current;
     dao.update(dto);
-    expect((await (dao.dataStream.current)).value).toBe(dto.value);
+    expect((await current).value).toBe(dto.value);
+    expect(dao.dataStream.last.value).toBe(dto.value);
+    dao.close();
+    // FIXME expect(dao.dataStream.current).toBe(null);
     expect(dao.dataStream.last.value).toBe(dto.value);
 });
