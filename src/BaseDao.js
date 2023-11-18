@@ -16,15 +16,20 @@ export default class BaseDao {
     constructor(dtoClass = BaseDto, channelClass = BaseChannel, ...params) {
         this.#dtoClass = dtoClass;
         this.#channel = createInstance(channelClass, ...params);
-        /* this.#dataStream = this.#channel.dataStream;
-        const newLast = () => this.dataToDto(this.#channel.dataStream.last);
+        let refresh;
+        this.#dataStream = new DataStream(refreshSetup => refresh = refreshSetup);
+        /* FIXME Chain DataStreams:
+        const originalLast = this.#dataStream.last;
+        const newLast = () => this.dataToDto(originalLast);
         Object.defineProperty(this.#dataStream, 'last', {
             get() {
                 return newLast();
             },
-        }); */
-        let refresh, end;
-        this.#dataStream = new DataStream(refreshSetup => refresh = refreshSetup, endSetup => end = endSetup);
+        });
+        this.#channel.dataStream.chain(this.#dataStream);
+        or, better:
+        this.#dataStream = this.#channel.dataStream.map(data => dataToDto(data));
+        */
         (async () => {
             for await (const data of this.#channel.dataStream) {
                 refresh(this.dataToDto(data));
