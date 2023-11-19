@@ -16,7 +16,7 @@ export default class BaseDao {
     constructor(dtoClass = BaseDto, channelClass = BaseChannel, ...params) {
         this.#dtoClass = dtoClass;
         this.#channel = createInstance(channelClass, ...params);
-        this.#dataStream = this.#channel.dataStream.createLinkedDataStream().addOutputFilter(data => this.dataToDto(data));
+        this.#dataStream = this.#channel.dataStream.createLinkedDataStream().addOutputMap(data => this.dataToDto(data));
     }
 
     dataToDto(data) { // TODO JSDoc
