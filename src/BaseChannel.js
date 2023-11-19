@@ -24,9 +24,7 @@ export default class BaseChannel { // TODO Change to CQRS with event sourcing fo
     }
 
     _update(data) { // TODO JSDoc
-        if (data !== undefined) {
-            this.#refresh(data);
-        }
+        return this.#refresh(data);
     }
 
     _close() { // TODO JSDoc

@@ -74,10 +74,12 @@ export default class DataStream {
 
     #refresh(data) {
         if (this.#current) {
+            const lastCurrent = this.#current;
             this.#last = data;
             this.#current.doResolve(this.last);
             this.#current = createExternallyResolvablePromise();
             this.#refreshListeners.forEach(linkedRefresh => linkedRefresh(data));
+            return lastCurrent;
         }
     }
 

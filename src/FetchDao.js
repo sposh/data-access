@@ -23,7 +23,7 @@ export default class FetchDao extends CrudDao {
      */
     create(url, init, dto) {
         this.getChannelAction('POST')(url, init, this.dtoToData(dto));
-        return this.dataStream
+        return this.dataStream.current;
     }
 
     /**
@@ -35,7 +35,7 @@ export default class FetchDao extends CrudDao {
      */
     read(url, init) {
         this.getChannelAction('GET')(url, init);
-        return this.dataStream
+        return this.dataStream.current;
     }
 
     /**
@@ -48,7 +48,7 @@ export default class FetchDao extends CrudDao {
      */
     update(url, init, dto) {
         this.getChannelAction('PUT')(url, init, this.dtoToData(dto));
-        return this.dataStream
+        return this.dataStream.current;
     }
 
     /**
@@ -60,6 +60,6 @@ export default class FetchDao extends CrudDao {
      */
     delete(url, init) {
         this.getChannelAction('DELETE')(url, init);
-        return this.dataStream
+        return this.dataStream.current;
     }
 }

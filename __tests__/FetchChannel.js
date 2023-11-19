@@ -5,11 +5,8 @@ import { FetchChannel } from '..';
 
 test('Basic FetchChannel', async () => {
     const channel1 = new FetchChannel();
-    channel1.get('https://api.github.com/users/sposh/repos');
-    expect((await (await channel1.dataStream.current).json())[0].id).toBe(696815904);
+    expect((await (await channel1.get('https://api.github.com/users/sposh/repos')).json())[0].id).toBe(696815904);
     const channel2 = new FetchChannel();
-    channel2.get('https://api.github.com/users/sposh/repos');
-    expect((await (await channel2.dataStream.current).json())[0].id).toBe(696815904);
-    channel1.get('https://api.github.com/users/jane/repos');
-    expect((await (await channel1.dataStream.current).json())[0].id).toBe(112634155);
+    expect((await (await channel2.get('https://api.github.com/users/sposh/repos')).json())[0].id).toBe(696815904);
+    expect((await (await channel1.get('https://api.github.com/users/jane/repos')).json())[0].id).toBe(112634155);
 });

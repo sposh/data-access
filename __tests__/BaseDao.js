@@ -1,12 +1,12 @@
 import { BaseDao, BaseChannel, BaseDto } from '..';
 
-test('BaseDao.dataStream', async () => {
+test('Basic BaseDao', async () => {
     class ChannelClass extends BaseChannel {
         static get actions() {
             return { UPDATE: 'update', CLOSE: 'close' };
         }
         update(data) {
-            this._update(data);
+            return this._update(data);
         }
         close() {
             this._close();
@@ -29,8 +29,10 @@ test('BaseDao.dataStream', async () => {
         dtoToData(dto) {
             return dto.value;
         }
-        update(dto) {
+        async update(dto) {
+            const lastCurrent = this.dataStream.current;
             this.getChannelAction('UPDATE')(this.dtoToData(dto));
+            return lastCurrent;
         }
         close() {
             this.getChannelAction('CLOSE')();
@@ -38,9 +40,7 @@ test('BaseDao.dataStream', async () => {
     })();
     expect(dao.dataStream.last).toBe(undefined);
     const dto = new DtoClass('i');
-    const current = dao.dataStream.current;
-    dao.update(dto);
-    expect((await current).value).toBe(dto.value);
+    expect((await dao.update(dto)).value).toBe(dto.value);
     expect(dao.dataStream.last.value).toBe(dto.value);
     dao.close();
     expect(dao.dataStream.current).toBe(null);
