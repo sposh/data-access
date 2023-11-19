@@ -54,11 +54,11 @@ export default class DataStream {
         return this.#current ? this.#current.then() : this.#current; // Ensure inmutability
     }
 
-    addOutputMap(filterFn) {
+    addOutputMap(mapFn) {
         const originalLastGet = Object.getOwnPropertyDescriptor(this.constructor.prototype, 'last').get.bind(this);
         Object.defineProperty(this, 'last', {
             get() {
-                return filterFn(originalLastGet());
+                return mapFn(originalLastGet());
             },
         });
         return this;
