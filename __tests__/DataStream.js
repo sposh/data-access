@@ -1,4 +1,4 @@
-import DataStream from '../src/DataStream';
+import { DataStream } from '..';
 
 test('Basic DataStream', async () => {
     let refresh, end;

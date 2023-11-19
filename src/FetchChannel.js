@@ -1,6 +1,6 @@
-import logger from 'winston';
 import fetch from 'node-fetch';
 import BaseChannel from './BaseChannel.js';
+import { logger } from './utils.js';
 
 // TODO More tests, check JSDocs
 

@@ -1,6 +1,4 @@
-import BaseDao from '../src/BaseDao';
-import BaseChannel from '../src/BaseChannel';
-import BaseDto from '../src/BaseDto';
+import { BaseDao, BaseChannel, BaseDto } from '..';
 
 test('BaseDao.dataStream', async () => {
     class ChannelClass extends BaseChannel {

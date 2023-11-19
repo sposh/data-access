@@ -1,4 +1,4 @@
-import BaseDto from '../src/BaseDto';
+import { BaseDto } from '..';
 
 test('Basic BaseDto', () => {
     const baseDto = new BaseDto();

@@ -1,6 +1,6 @@
 import { createExternallyResolvablePromise } from './utils'
 
-// TODO JSDoc & more tests
+// TODO JSDoc & more tests; filter, debounce, join...
 
 export default class DataStream {
     static joinDataStreams(dataStreams, joinDataFunction, refresh, end) { // TODO Tests

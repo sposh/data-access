@@ -16,7 +16,7 @@ export default class CrudDao extends BaseDao {
      * @return {*} The created object, or `undefined` if object is not created
      */
     create(key, context, dto) {
-        abstractMethod(`CrudDao.${[methods.CREATE]}`, key, context, this.dtoToData(dto));
+        abstractMethod('CrudDao.create', key, context, this.dtoToData(dto));
         return this.dataStream;
     }
 
@@ -29,7 +29,7 @@ export default class CrudDao extends BaseDao {
      * @return {*} The found object, or `undefined` if object is not found
      */
     read(key, context) {
-        abstractMethod(`CrudDao.${[methods.READ]}`, key, context);
+        abstractMethod('CrudDao.read', key, context);
         return this.dataStream;
     }
 
@@ -43,7 +43,7 @@ export default class CrudDao extends BaseDao {
      * @return {*} The modified object, or `undefined` if object is not found
      */
     update(key, context, dto) {
-        abstractMethod(`CrudDao.${[methods.UPDATE]}`, key, context, this.dtoToData(dto));
+        abstractMethod('CrudDao.update', key, context, this.dtoToData(dto));
         return this.dataStream;
     }
 
@@ -56,14 +56,7 @@ export default class CrudDao extends BaseDao {
      * @return {*} The deleted object, or `undefined` if object is not found
      */
     delete(key, context) {
-        abstractMethod(`CrudDao.${[methods.DELETE]}`, key, context);
+        abstractMethod('CrudDao.delete', key, context);
         return this.dataStream;
     }
 }
-
-export const methods = Object.freeze({
-    CREATE: 'create',
-    READ: 'read',
-    UPDATE: 'update',
-    DELETE: 'delete',
-});

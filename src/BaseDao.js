@@ -1,6 +1,5 @@
 import BaseDto from './BaseDto';
 import BaseChannel from './BaseChannel';
-import DataStream from './DataStream';
 import { createInstance } from './utils';
 
 // TODO More tests, JSDoc
@@ -29,7 +28,7 @@ export default class BaseDao {
         return dto._params;
     }
 
-    getChannelAction(action) {
+    getChannelAction(action) { // FIXME Not too pleased with this fudge
         if (Object.keys(this.#channel.constructor.actions).includes(action)) {
             // Would love to inject dto -> this.dtoToData(dto) automatically here, but there may be various parameters and we don't know which is/are DTOs
             return this.#channel[this.#channel.constructor.actions[action]].bind(this.#channel);

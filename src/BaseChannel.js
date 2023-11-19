@@ -7,7 +7,7 @@ import DataStream from './DataStream';
  * @interface
  */
 export default class BaseChannel { // TODO Change to CQRS with event sourcing for DDD & event-driven architecture; port/adapter?
-    static get actions() {
+    static get actions() { // FIXME Not too pleased with this fudge
         return {};
     }
 

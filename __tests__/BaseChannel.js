@@ -1,4 +1,4 @@
-import BaseChannel from '../src/BaseChannel';
+import { BaseChannel } from '..';
 
 test('BaseChannel.dataStream', async () => {
     const channel = new BaseChannel();
