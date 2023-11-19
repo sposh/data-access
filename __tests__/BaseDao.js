@@ -45,6 +45,6 @@ test('BaseDao.dataStream', async () => {
     expect((await current).value).toBe(dto.value);
     expect(dao.dataStream.last.value).toBe(dto.value);
     dao.close();
-    // FIXME (need to chain streams) expect(dao.dataStream.current).toBe(null);
+    expect(dao.dataStream.current).toBe(null);
     expect(dao.dataStream.last.value).toBe(dto.value);
 });

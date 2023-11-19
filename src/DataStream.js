@@ -30,6 +30,8 @@ export default class DataStream {
 
     #last;
     #current = createExternallyResolvablePromise();
+    #refreshListeners = [];
+    #endListeners = [];
 
     // Call like: let refresh, end; new DataStream(refreshSetup => refresh = refreshSetup, endSetup => end = endSetup);
     constructor(refreshSetup = () => {}, endSetup = () => {}) { // TODO Add 3rd parameter bufferSize (and 4th parameter bufferIsGlobal?)
@@ -52,16 +54,36 @@ export default class DataStream {
         return this.#current ? this.#current.then() : this.#current; // Ensure inmutability
     }
 
+    addOutputFilter(filterFn) {
+        const originalLastGet = Object.getOwnPropertyDescriptor(this.constructor.prototype, 'last').get.bind(this);
+        Object.defineProperty(this, 'last', {
+            get() {
+                return filterFn(originalLastGet());
+            },
+        });
+        return this;
+    }
+
+    createLinkedDataStream() {
+        let refresh, end;
+        const linkedDataStream = new DataStream(refreshSetup => refresh = refreshSetup, endSetup => end = endSetup);
+        this.#refreshListeners.push(refresh);
+        this.#endListeners.push(end);
+        return linkedDataStream;
+    }
+
     #refresh(data) {
         if (this.#current) {
             this.#last = data;
             this.#current.doResolve(this.last);
             this.#current = createExternallyResolvablePromise();
+            this.#refreshListeners.forEach(linkedRefresh => linkedRefresh(data));
         }
     }
 
     #end() {
         this.#current = null;
+        this.#endListeners.forEach(linkedEnd => linkedEnd());
     }
 
     toString() {
