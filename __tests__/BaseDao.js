@@ -29,7 +29,7 @@ test('Basic BaseDao', async () => {
         dtoToData(dto) {
             return dto.value;
         }
-        async update(dto) {
+        update(dto) {
             const lastCurrent = this.dataStream.current;
             this.getChannelAction('UPDATE')(this.dtoToData(dto));
             return lastCurrent;

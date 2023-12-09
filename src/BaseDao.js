@@ -15,12 +15,24 @@ export default class BaseDao {
     constructor(dtoClass = BaseDto, channelClass = BaseChannel, ...params) {
         this.#dtoClass = dtoClass;
         this.#channel = createInstance(channelClass, ...params);
-        this.#dataStream = this.#channel.dataStream.createLinkedDataStream().addOutputMap(data => this.dataToDto(data));
+        this.#dataStream = this.#channel.dataStream.createLinkedDataStream(data => {
+            if (data !== undefined) {
+                return (async () => {
+                    const dtoParams = await this.dataToDtoParams(data);
+                    if (dtoParams === null || typeof dtoParams[Symbol.iterator] !== 'function') {
+                        return createInstance(this.#dtoClass, dtoParams); // Promise -> DTO with one parameter
+                    } else {
+                        return createInstance(this.#dtoClass, ...dtoParams); // Promise -> DTO with various parameters
+                    }
+                })();
+            } else {
+            } // undefined
+        });
     }
 
-    dataToDto(data) { // TODO JSDoc
+    dataToDtoParams(data) { // TODO JSDoc - return array or undefined
         if (data !== undefined) {
-            return createInstance(this.#dtoClass, data);
+            return [data];
         }
     }
 

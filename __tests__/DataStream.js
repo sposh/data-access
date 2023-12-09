@@ -18,21 +18,6 @@ test('Basic DataStream', async () => {
     expect(dataStream.current).toBe(null);
 });
 
-
-test('DataStream outputFilter', async () => {
-    let refresh, end;
-    const dataStream = (new DataStream(refreshSetup => refresh = refreshSetup, endSetup => end = endSetup)).addOutputMap(data => data ? data + data : data);
-    expect(dataStream.last).toBe(undefined);
-    const value = 'i';
-    let current = dataStream.current;
-    refresh(value);
-    expect(await current).toBe(value + value);
-    expect(dataStream.last).toBe(value + value);
-    end();
-    expect(dataStream.last).toBe(value + value);
-    expect(dataStream.current).toBe(null);
-});
-
 test('DataStream iteration', async () => {
     let refresh, end;
     const dataStream = new DataStream(refreshSetup => refresh = refreshSetup, endSetup => end = endSetup);
@@ -68,7 +53,7 @@ test('DataStream iteration', async () => {
 test('DataStream chaining', async () => {
     let refresh, end;
     const dataStream = new DataStream(refreshSetup => refresh = refreshSetup, endSetup => end = endSetup);
-    const chainedDataStream = dataStream.createLinkedDataStream().addOutputMap(data => data ? data + data : data);
+    const chainedDataStream = dataStream.createLinkedDataStream(data => data ? data + data : data);
     expect(dataStream.last).toBe(undefined);
     expect(chainedDataStream.last).toBe(undefined);
     const values = [1, 2, 3, 4, 5];

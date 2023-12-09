@@ -54,20 +54,11 @@ export default class DataStream {
         return this.#current ? this.#current.then() : this.#current; // Ensure inmutability
     }
 
-    addOutputMap(mapFn) {
-        const originalLastGet = Object.getOwnPropertyDescriptor(this.constructor.prototype, 'last').get.bind(this);
-        Object.defineProperty(this, 'last', {
-            get() {
-                return mapFn(originalLastGet());
-            },
-        });
-        return this;
-    }
-
-    createLinkedDataStream() {
+    createLinkedDataStream(dataMapFn) {
         let refresh, end;
         const linkedDataStream = new DataStream(refreshSetup => refresh = refreshSetup, endSetup => end = endSetup);
-        this.#refreshListeners.push(refresh);
+        linkedDataStream.toString = () => `LinkedDataStream{${this}}`; // TODO Remove?
+        this.#refreshListeners.push(async data => refresh(await dataMapFn(data)));
         this.#endListeners.push(end);
         return linkedDataStream;
     }
