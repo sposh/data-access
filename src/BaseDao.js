@@ -37,7 +37,7 @@ export default class BaseDao {
     }
 
     dtoToData(dto) { // TODO JSDoc
-        return dto._params;
+        return dto?._params;
     }
 
     getChannelAction(action) { // FIXME Not too pleased with this fudge
