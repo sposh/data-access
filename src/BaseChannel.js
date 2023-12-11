@@ -15,7 +15,7 @@ export default class BaseChannel { // TODO Change to CQRS with event sourcing fo
     #refresh;
     #end;
 
-    constructor() {
+    constructor() { // TODO Make singleton
         this.#dataStream = new DataStream(refreshSetup => this.#refresh = refreshSetup, endSetup => this.#end = endSetup);
     }
 
