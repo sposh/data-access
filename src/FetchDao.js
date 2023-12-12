@@ -9,8 +9,8 @@ import FetchChannel from './FetchChannel';
  * @implements CrudDao
  */
 export default class FetchDao extends CrudDao {
-    constructor(dtoClass) {
-        super(dtoClass, FetchChannel);
+    constructor(dtoClass, channelClass = FetchChannel, ...params) {
+        super(dtoClass, channelClass, ...params);
     }
 
     /**

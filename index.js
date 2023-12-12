@@ -6,3 +6,4 @@ export { default as BaseDao } from './src/BaseDao';
 export { default as CrudDao } from './src/CrudDao';
 export { default as FetchDao } from './src/FetchDao';
 export { default as FetchJsonDao } from './src/FetchJsonDao';
+export { default as composedDaoMixin } from './src/composedDaoMixin';
