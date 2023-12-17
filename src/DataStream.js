@@ -1,31 +1,25 @@
 import { createExternallyResolvablePromise } from './utils'
 
-// TODO JSDoc & more tests; filter, debounce, join...
+// TODO JSDoc & more tests; filter, debounce...
 
 export default class DataStream {
-    static joinDataStreams(dataStreams, joinDataFunction, refresh, end) { // TODO Tests
-        const joinedReply = new DataStream(refreshSetup => refresh = refreshSetup, endSetup => end = endSetup);
-        Object.defineProperty(joinedReply, 'last', {
-            get() {
-                return joinDataFunction(dataStreams.map(dataStreams => dataStreams.last));
-            },
-        });
-        Object.defineProperty(joinedReply, 'current', {
-            get() {
-                const doEnd = false;
-                return Promise.all(dataStreams.map(dataStream => {
-                    const current = dataStream.current;
-                    if (current === null) {
-                        doEnd = true;
-                    }
-                    if (doEnd) {
-                        end();
-                    }
-                    return current;
-                }));
-            },
-        });
-        return joinedReply;
+    static combine(dataStreams) { // TODO JSDoc
+        let refresh;
+        let end;
+        const combinedStream = new DataStream(refreshSetup => refresh = refreshSetup, endSetup => end = endSetup);
+        let lastValues = new Array(dataStreams.length);
+        dataStreams.forEach(async (dataStream, i) => {
+            for await (const value of dataStream) {
+                // FIXME If this ended stop iterating for all streams
+                lastValues[i] = value; // can overwrite old values, this is expected
+                if (!lastValues.includes()) { // if no more undefineds
+                    refresh(lastValues);
+                    lastValues = new Array(dataStreams.length); // don't mutate
+                }
+            }
+            // FIXME Call .end() on any ended stream
+            });
+        return combinedStream;
     }
 
     #last;
@@ -54,7 +48,7 @@ export default class DataStream {
         return this.#current ? this.#current.then() : this.#current; // Ensure inmutability
     }
 
-    createLinkedDataStream(dataMapFn) {
+    map(dataMapFn) {
         let refresh, end;
         const linkedDataStream = new DataStream(refreshSetup => refresh = refreshSetup, endSetup => end = endSetup);
         linkedDataStream.toString = () => `LinkedDataStream{${this}}`; // TODO Remove?

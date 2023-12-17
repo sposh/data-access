@@ -14,7 +14,7 @@
     "main": "index.js",
     "repository": "github:sposh/data-access",
     "scripts": {
-        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js __tests__/patterns.js",
         "clean": "rimraf node_modules"
     },
     "config": {

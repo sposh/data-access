@@ -53,7 +53,7 @@ test('DataStream iteration', async () => {
 test('DataStream chaining', async () => {
     let refresh, end;
     const dataStream = new DataStream(refreshSetup => refresh = refreshSetup, endSetup => end = endSetup);
-    const chainedDataStream = dataStream.createLinkedDataStream(data => data ? data + data : data);
+    const chainedDataStream = dataStream.map(data => data ? data + data : data);
     expect(dataStream.last).toBe(undefined);
     expect(chainedDataStream.last).toBe(undefined);
     const values = [1, 2, 3, 4, 5];

@@ -15,7 +15,7 @@ export default class BaseDao {
     constructor(dtoClass = BaseDto, channelClass = BaseChannel, ...params) {
         this.#dtoClass = dtoClass;
         this.#channel = createInstance(channelClass, ...params);
-        this.#dataStream = this.#channel.dataStream.createLinkedDataStream(data => {
+        this.#dataStream = this.#channel.dataStream.map(data => {
             if (data !== undefined) {
                 return (async () => {
                     const dtoParams = await this.dataToDtoParams(data);
@@ -26,7 +26,7 @@ export default class BaseDao {
                     }
                 })();
             } // undefined
-        }) ;
+        });
     }
 
     dataToDtoParams(data) { // TODO JSDoc - return array or undefined

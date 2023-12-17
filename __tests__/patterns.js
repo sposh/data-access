@@ -1,4 +1,5 @@
-import { composedDaoMixin, FetchJsonDao, BaseDto, FetchChannel } from '..';
+import { combinedDaoMixin, FetchJsonDao, BaseDto } from '..';
+
 // import fetch from 'node-fetch';
 
 // jest.mock('fetch'); // FIXME Use mock responses - throwing "require is not defined" error
@@ -95,14 +96,9 @@ class JaneComposedDao extends FetchJsonDao {
     }
 }
 
-class OneToManyDao extends composedDaoMixin(FetchJsonDao, SposhAndJane) {
-    #sposhDao = new SposhDao();
-    #janeDao = new JaneDao();
-    read() {
-        this.getChannelAction('UPDATE')(Promise.all([
-            this.#sposhDao.read(),
-            this.#janeDao.read(),
-        ]));
+class OneToManyDao extends combinedDaoMixin(FetchJsonDao, SposhAndJane, [new SposhDao(), new JaneDao()]) {
+    async read() {
+        this.daoList.forEach(dao => dao.read());
         return this.dataStream.current;
     }
     async dataToDtoParams(dataPromise) {
@@ -111,14 +107,9 @@ class OneToManyDao extends composedDaoMixin(FetchJsonDao, SposhAndJane) {
     }
 }
 
-class OneToManyComposedDao extends composedDaoMixin(FetchJsonDao, SposhAndJane) {
-    #sposhDao = new SposhComposedDao();
-    #janeDao = new JaneComposedDao();
+class OneToManyComposedDao extends combinedDaoMixin(FetchJsonDao, SposhAndJane, [new SposhComposedDao(), new JaneComposedDao()]) {
     read() {
-        this.getChannelAction('UPDATE')(Promise.all([
-            this.#sposhDao.read(),
-            this.#janeDao.read(),
-        ]));
+        this.daoList.forEach(dao => dao.read());
         return this.dataStream.current;
     }
     async dataToDtoParams(dataPromise) {
@@ -141,5 +132,5 @@ test('One to many (composed) pattern', async () => {
 });
 
 // TODO manyToOne
-// TODO manyToMany
-// TODO manyToManyComposed
+// TODO manyToOneIndependant (singleton + debounce, cache)
+// TODO manyToMany...
