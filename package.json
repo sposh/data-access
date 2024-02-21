@@ -21,7 +21,7 @@
         "engine-strict": true
     },
     "dependencies": {
-        "@sposh/oop-utils": "^1.0.0",
+        "@sposh/oop-utils": "file:../oop-utils",
         "node-fetch": "^3.3.2",
         "winston": "^3.11.0"
     },
