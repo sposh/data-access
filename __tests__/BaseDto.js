@@ -33,7 +33,7 @@ test('Extending BaseDto', () => {
             return this.toInmutable(this.#one);
         }
     }(1);
-    expect(extendedDto.toString()).toBe('ExtendedDto{ one: 1 }');
+    expect(extendedDto.toString()).toBe('ExtendedDto{ "one":1 }');
     expect(extendedDto.one).toBe(1);
     expect(extendedDto._params).toEqual([1]);
 });

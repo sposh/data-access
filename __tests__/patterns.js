@@ -1,3 +1,15 @@
+/**
+ * TODO
+ * 
+ * - manyIndependentFromOne
+ *   - singleton + debounce
+ *   - cache + ttl
+ *     - persistend with encryption & erasing
+ * - manyToMany orchestration / transformation; GraphQL-ish & HATEOAS
+ * - cf event-driven, hexagonal & repository pattern
+ * - Imporove usage doc
+ */
+
 import { combinedDaoMixin, FetchJsonDao, BaseDto, DtoCollection } from '..';
 
 // import fetch from 'node-fetch';
@@ -193,8 +205,5 @@ test('One (composed) from many pattern', async () => {
 }); */
 
 test('Many from one pattern', async () => {
-    expect((await (new ManyFromOneDao()).read()).toString()).toBe('Sposh{ one: sposh/azurepoc, two: sposh },Sposh2{ five: 696815904, six: 13214484 }');
+    expect((await (new ManyFromOneDao()).read()).toString()).toBe('Sposh{ "one":sposh/azurepoc, "two":sposh },Sposh2{ "five":696815904, "six":13214484 }');
 });
-
-// TODO manyIndependentFromOne (singleton + debounce, cache)
-// TODO manyToMany...

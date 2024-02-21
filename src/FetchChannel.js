@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
-import BaseChannel from './BaseChannel.js';
-import { logger } from './utils.js';
+import BaseChannel from './BaseChannel';
+import logger from './logger';
 
 // TODO More tests, check JSDocs
 

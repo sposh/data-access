@@ -1,3 +1,4 @@
+import { abstractMethod } from '@sposh/oop-utils';
 import BaseDao from './BaseDao'
 
 // TODO Tests, check JSDoc

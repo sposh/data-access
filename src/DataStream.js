@@ -1,6 +1,46 @@
-import { createExternallyResolvablePromise } from './utils'
-
 // TODO JSDoc & more tests; filter, debounce...
+
+// Deprecated
+function createExternallyResolvablePromiseOld() {
+    let _doResolve;
+    const promise = new Promise((resolve, reject) => {
+        try {
+            _doResolve = data => {_doResolve = null; return resolve(data);};
+        } catch (error) {
+            reject(error);
+        }
+    });
+    promise.doResolve = function (resolveData = null) {
+        if (_doResolve === null) {
+            logger.warn('doResolve already called for this Promise', promise);
+            return promise.then(() => new Error('doResolve already called for this Promise'));
+        } else {
+            _doResolve(resolveData);
+        }
+        return promise.then(() => resolveData);
+    };
+    // Caution: can only call doResolve on original Promise, not on the copies returned by then/catch/finally (unless we uncomment the next line)
+    // ['then', 'catch', 'finally'].forEach((method) => {addAttributeToAttributeReturn(promise, method, 'doResolve');}); // TODO propagate "already called" changes through promise chain
+    return promise;
+}
+
+function createExternallyResolvablePromise() {
+    let resolver;
+    const promise = new Promise(function (resolve) { // TODO handle reject
+        resolver = function (data) {
+            resolve(data);
+            promise.doResolve = function () {
+                logger.warn('Resolver already called for this Promise');
+                return promise;
+            }
+            return promise;
+        }
+    });
+    promise.doResolve = resolver;
+    // Caution: can only call doResolve on original Promise, not on the copies returned by then/catch/finally (unless we uncomment the next line)
+    // ['then', 'catch', 'finally'].forEach((method) => {addAttributeToAttributeReturn(promise, method, 'doResolve');}); // TODO propagate "already called" changes through promise chain
+    return promise;
+}
 
 export default class DataStream {
     static combine(dataStreams) { // TODO JSDoc

@@ -1,6 +1,5 @@
 import BaseDto from './BaseDto';
 import BaseChannel from './BaseChannel';
-import { createInstance } from './utils';
 
 // TODO More tests, JSDoc
 
@@ -14,15 +13,15 @@ export default class BaseDao {
 
     constructor(dtoClass = BaseDto, channelClass = BaseChannel, ...params) {
         this.#dtoClass = dtoClass;
-        this.#channel = createInstance(channelClass, ...params);
+        this.#channel = new channelClass(...params);
         this.#dataStream = this.#channel.dataStream.map(data => {
             if (data !== undefined) {
                 return (async () => {
                     const dtoParams = await this.dataToDtoParams(data);
                     if (dtoParams === null || typeof dtoParams[Symbol.iterator] !== 'function') {
-                        return this.#dtoClass ? createInstance(this.#dtoClass, dtoParams): dtoParams; // Promise -> DTO with one parameter
+                        return this.#dtoClass ? new this.#dtoClass(dtoParams): dtoParams; // Promise -> DTO with one parameter
                     } else {
-                        return this.#dtoClass ? createInstance(this.#dtoClass, ...dtoParams): dtoParams; // Promise -> DTO with various parameters
+                        return this.#dtoClass ? new this.#dtoClass(...dtoParams): dtoParams; // Promise -> DTO with various parameters
                     }
                 })();
             } // undefined
