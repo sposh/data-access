@@ -19,10 +19,10 @@ export default class BaseDao {
             if (data !== undefined) {
                 return (async () => {
                     const dtoParams = await this.dataToDtoParams(data);
-                    if (dtoParams === null || typeof dtoParams[Symbol.iterator] !== 'function') {
-                        return this.#dtoClass ? createInstance(this.#dtoClass, dtoParams): dtoParams; // Promise -> DTO with one parameter
+                    if (this.#dtoClass) {
+                        return dtoParams ? createInstance(this.#dtoClass, ...dtoParams): createInstance(this.#dtoClass);
                     } else {
-                        return this.#dtoClass ? createInstance(this.#dtoClass, ...dtoParams): dtoParams; // Promise -> DTO with various parameters
+                        return dtoParams;
                     }
                 })();
             } // undefined
