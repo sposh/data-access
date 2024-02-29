@@ -1,7 +1,5 @@
 import winston from 'winston';
 
-// TODO JSDoc & tests
-
 export default winston.createLogger({
 	level: 'debug',
 	transports: [
