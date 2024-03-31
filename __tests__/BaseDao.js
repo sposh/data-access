@@ -1,4 +1,4 @@
-import { BaseDao, BaseChannel, BaseDto } from '..';
+import { BaseDao, BaseChannel, BaseDto } from '../index.js';
 
 test('Basic BaseDao', async () => {
     class ChannelClass extends BaseChannel {

@@ -1,5 +1,5 @@
-import CrudDao from './CrudDao';
-import FetchChannel from './FetchChannel';
+import CrudDao from './CrudDao.js';
+import FetchChannel from './FetchChannel.js';
 
 // TODO Tests, check JSDocs
 

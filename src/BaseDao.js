@@ -1,6 +1,6 @@
 import { createInstance } from '@sposh/oop-utils';
-import BaseDto from './BaseDto';
-import BaseChannel from './BaseChannel';
+import BaseDto from './BaseDto.js';
+import BaseChannel from './BaseChannel.js';
 
 // TODO More tests, JSDoc
 

@@ -10,7 +10,7 @@
  * - Imporove usage doc
  */
 
-import { combinedDaoMixin, FetchJsonDao, BaseDto, DtoCollection } from '..';
+import { combinedDaoMixin, FetchJsonDao, BaseDto, DtoCollection } from '../index.js';
 
 // import fetch from 'node-fetch';
 

@@ -1,4 +1,4 @@
-import { BaseChannel } from '..';
+import { BaseChannel } from '../index.js';
 
 test('Basic BaseChannel', async () => {
     const channel = new BaseChannel();

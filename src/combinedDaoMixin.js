@@ -1,5 +1,5 @@
-import BaseChannel from './BaseChannel';
-import DataStream from './DataStream';
+import BaseChannel from './BaseChannel.js';
+import DataStream from './DataStream.js';
 
 export default function combinedDaoMixin(mixinDaoClass, mixinDtoClass, mixinDaoList, ...mixinParams) {
     return class extends mixinDaoClass {

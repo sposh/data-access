@@ -1,4 +1,4 @@
-import FetchDao from './FetchDao';
+import FetchDao from './FetchDao.js';
 
 // TODO More tests, JSDocs
 

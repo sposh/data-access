@@ -1,4 +1,4 @@
-import { FetchChannel } from '..';
+import { FetchChannel } from '../index.js';
 // import fetch from 'node-fetch';
 
 // jest.mock('fetch'); // FIXME Use mock responses - throwing "require is not defined" error
