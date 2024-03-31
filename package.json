@@ -1,6 +1,6 @@
 {
     "name": "@sposh/data-access",
-    "version": "1.0.1",
+    "version": "1.0.3",
     "description": "DAO/DTO pattern library for agnostic data access.",
     "keywords": [
         "data access",
