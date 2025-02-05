@@ -20,7 +20,6 @@ export default class BaseDao {
                 return (async () => {
                     const dtoParams = await this.dataToDtoParams(data);
                     if (this.#dtoClass) {
-                        console.log(this.#dtoClass, dtoParams);
                         return dtoParams ? createInstance(this.#dtoClass, ...dtoParams): createInstance(this.#dtoClass);
                     } else {
                         return dtoParams;
