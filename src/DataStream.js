@@ -24,7 +24,7 @@ function createExternallyResolvablePromiseOld() {
     return promise;
 }
 
-function createExternallyResolvablePromise() {
+function createExternallyResolvablePromise() { // TODO Change to Promise.withResolvers
     let resolver;
     const promise = new Promise(function (resolve) { // TODO handle reject
         resolver = function (data) {
