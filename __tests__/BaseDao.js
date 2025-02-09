@@ -1,17 +1,6 @@
 import { BaseDao, BaseChannel, BaseDto } from '../index.js';
 
 test('Basic BaseDao', async () => {
-    class ChannelClass extends BaseChannel {
-        static get actions() {
-            return { UPDATE: 'update', CLOSE: 'close' };
-        }
-        update(data) {
-            return this._update(data);
-        }
-        close() {
-            this._close();
-        }
-    };
     class DtoClass extends BaseDto {
         #value;
         constructor(value) {
@@ -24,15 +13,14 @@ test('Basic BaseDao', async () => {
     };
     const dao = new (class MyDao extends BaseDao {
         constructor() {
-            super(DtoClass, ChannelClass);
+            super(DtoClass);
         }
         dtoToData(dto) {
             return dto.value;
         }
         update(dto) {
-            const lastCurrent = this.dataStream.current;
             this.getChannelAction('UPDATE')(this.dtoToData(dto));
-            return lastCurrent;
+            return this.dataStream.current;
         }
         close() {
             this.getChannelAction('CLOSE')();

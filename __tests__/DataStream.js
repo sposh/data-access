@@ -69,6 +69,7 @@ test('DataStream chaining', async () => {
         for await (const data of chainedDataStream) {
             expect(data).toBe(values[j] + values[j]);
             j++;
+            expect(j).toBe(i);
         }
     })();
     /* FIXME Change data refresh to this, but for some reason we send 3 refreshes per iterator yield
@@ -85,12 +86,13 @@ test('DataStream chaining', async () => {
         setTimeout(() => {refresh(values[values.length - 1]); resolve();}, values.length * 10);
     });
     expect(dataStream.last).toBe(values[values.length - 1]);
+    await new Promise(resolve => setTimeout(() => resolve(), 10)); // FIXME Remove need for this pause
     expect(chainedDataStream.last).toBe(values[values.length - 1] + values[values.length - 1]);
     end();
     expect(dataStream.last).toBe(values[values.length - 1]);
     expect(chainedDataStream.last).toBe(values[values.length - 1] + values[values.length - 1]);
     expect(dataStream.current).toBe(null);
     expect(chainedDataStream.current).toBe(null);
-    expect(i).toBe(values.length - 1);
-    expect(j).toBe(values.length - 1);
+    expect(i).toBe(values.length);
+    expect(j).toBe(values.length);
 });

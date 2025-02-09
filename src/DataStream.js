@@ -92,7 +92,7 @@ export default class DataStream {
         let refresh, end;
         const linkedDataStream = new DataStream(refreshSetup => refresh = refreshSetup, endSetup => end = endSetup);
         linkedDataStream.toString = () => `LinkedDataStream{${this}}`; // TODO Remove?
-        this.#refreshListeners.push(async data => refresh(await dataMapFn(data)));
+        this.#refreshListeners.push(async data => refresh(await dataMapFn(await data)));
         this.#endListeners.push(end);
         return linkedDataStream;
     }

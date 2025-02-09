@@ -10,7 +10,7 @@
  * - Imporove usage doc
  */
 
-import { CombinedDao, FetchJsonDao, CrudDao, BaseDto, DtoCollection } from '../index.js';
+import { CombinedDao, FetchJsonDao, BaseDto } from '../index.js';
 
 // import fetch from 'node-fetch';
 
@@ -71,9 +71,8 @@ class SposhDao extends FetchJsonDao {
     read() {
         return super.read('https://api.github.com/users/sposh/repos');
     }
-    async dataToDtoParams(response) {
-        const json = (await super.dataToDtoParams(response))[0];
-        return [json[0].full_name, json[0].owner.login];
+    dataToDtoParams(data) {
+        return [data[0].full_name, data[0].owner.login];
     }
 }
 

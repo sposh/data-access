@@ -8,7 +8,7 @@ import DataStream from './DataStream.js';
  */
 export default class BaseChannel { // TODO Change to CQRS with event sourcing for DDD & event-driven architecture; port/adapter?
     static get actions() { // FIXME Not too pleased with this fudge
-        return { UPDATE: '_update' }; // return {};
+        return { UPDATE: '_update', 'CLOSE': '_close' }; // return {};
     }
 
     #dataStream;
@@ -24,7 +24,7 @@ export default class BaseChannel { // TODO Change to CQRS with event sourcing fo
     }
 
     _update(data) { // TODO JSDoc
-        return this.#refresh(data);
+        this.#refresh(data);
     }
 
     _close() { // TODO JSDoc
