@@ -22,10 +22,9 @@ export default class FetchChannel extends BaseChannel {
      * @param {Object} value The body of the `Request` (the new object to create - optional)
      * @return {Promise<Response>} TODO
      */
-    post(url, init, value) {
+    post(daoCallback, url, init, value) {
         logger.http(`post ${url}`);
-        handleData(fetch(url, { method: 'POST', body: value, ...init })).then(data => this._update(data));
-        return this.dataStream.current;
+        handleData(fetch(url, { method: 'POST', body: value, ...init })).then(data => daoCallback(data));
     }
 
     /**
@@ -35,10 +34,9 @@ export default class FetchChannel extends BaseChannel {
      * @param {Object} [init] Any custom settings that you want to apply to the request (optional)
      * @return {Promise<Response>} TODO
      */
-    get(url, init) {
+    get(daoCallback, url, init) {
         logger.http(`get ${url}`);
-        handleData(fetch(url, { method: 'GET', ...init })).then(data => this._update(data));
-        return this.dataStream.current;
+        handleData(fetch(url, { method: 'GET', ...init })).then(data => daoCallback(data));
     }
 
     /**
@@ -49,10 +47,9 @@ export default class FetchChannel extends BaseChannel {
      * @param {Object} value The body of the `Request` (the new value - optional)
      * @return {Promise<Response>} TODO
      */
-    put(url, init, value) {
+    put(daoCallback, url, init, value) {
         logger.http(`put ${url}`);
-        handleData(fetch(url, { method: 'PUT', body: value, ...init })).then(data => this._update(data));
-        return this.dataStream.current;
+        handleData(fetch(url, { method: 'PUT', body: value, ...init })).then(data => daoCallback(data));
     }
 
     /**
@@ -62,10 +59,9 @@ export default class FetchChannel extends BaseChannel {
      * @param {Object} [init] Any custom settings that you want to apply to the request (optional)
      * @return {Promise<Response>} TODO
      */
-    delete(url, init) {
+    delete(daoCallback, url, init) {
         logger.http(`delete ${url}`);
-        handleData(fetch(url, { method: 'DELETE', ...init })).then(data => this._update(data));
-        return this.dataStream.current;
+        handleData(fetch(url, { method: 'DELETE', ...init })).then(data => daoCallback(data));
     }
 }
 

@@ -1,4 +1,3 @@
-import { abstractMethod } from '@sposh/oop-utils';
 import BaseDao from './BaseDao.js'
 
 // TODO Tests, check JSDoc
@@ -17,8 +16,7 @@ export default class CrudDao extends BaseDao {
      * @return {*} The created object, or `undefined` if object is not created
      */
     create(key, context, dto) {
-        abstractMethod('CrudDao.create', key, context, this.dtoToData(dto));
-        return this.dataStream.current;
+        return this.__exec__(false, null, key, context, dto);
     }
 
     /**
@@ -30,8 +28,7 @@ export default class CrudDao extends BaseDao {
      * @return {*} The found object, or `undefined` if object is not found
      */
     read(key, context) {
-        abstractMethod('CrudDao.read', key, context);
-        return this.dataStream.current;
+        return this.__exec__(false, null, key, context);
     }
 
     /**
@@ -44,8 +41,7 @@ export default class CrudDao extends BaseDao {
      * @return {*} The modified object, or `undefined` if object is not found
      */
     update(key, context, dto) {
-        abstractMethod('CrudDao.update', key, context, this.dtoToData(dto));
-        return this.dataStream.current;
+        return this.__exec__(false, null, key, context);
     }
 
     /**
@@ -57,7 +53,6 @@ export default class CrudDao extends BaseDao {
      * @return {*} The deleted object, or `undefined` if object is not found
      */
     delete(key, context) {
-        abstractMethod('CrudDao.delete', key, context);
-        return this.dataStream.current;
+        return this.__exec__(false, null, key, context);
     }
 }

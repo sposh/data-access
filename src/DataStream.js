@@ -43,7 +43,7 @@ function createExternallyResolvablePromise() { // TODO Change to Promise.withRes
 }
 
 export default class DataStream {
-    static combine(dataStreams) { // TODO JSDoc
+    static combine(dataStreams, mapFunction = values => values) { // TODO JSDoc
         let refresh;
         let end;
         const combinedStream = new DataStream(refreshSetup => refresh = refreshSetup, endSetup => end = endSetup);
@@ -53,7 +53,7 @@ export default class DataStream {
                 // FIXME If this ended stop iterating for all streams
                 lastValues[i] = value; // can overwrite old values, this is expected
                 if (!lastValues.includes()) { // if no more undefineds
-                    refresh(lastValues);
+                    refresh(mapFunction(lastValues));
                     lastValues = new Array(dataStreams.length); // don't mutate
                 }
             }
@@ -88,7 +88,7 @@ export default class DataStream {
         return this.#current ? this.#current.then() : this.#current; // Ensure inmutability
     }
 
-    map(dataMapFn) {
+    map(dataMapFn) { // TODO DO we want this? If so create simplifies rxjs refactor
         let refresh, end;
         const linkedDataStream = new DataStream(refreshSetup => refresh = refreshSetup, endSetup => end = endSetup);
         linkedDataStream.toString = () => `LinkedDataStream{${this}}`; // TODO Remove?

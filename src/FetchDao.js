@@ -22,8 +22,7 @@ export default class FetchDao extends CrudDao {
      * @return {Promise<Response>} A `Promise` resolving to the `Response` object
      */
     create(url, init, dto) {
-        this.getChannelAction('POST')(url, init, this.dtoToData(dto));
-        return this.dataStream.current;
+        return this.__exec__(false, 'POST', url, init, dto);
     }
 
     /**
@@ -34,8 +33,7 @@ export default class FetchDao extends CrudDao {
      * @return {Promise<Response>} A `Promise` resolving to the `Response` object
      */
     read(url, init) {
-        this.getChannelAction('GET')(url, init);
-        return this.dataStream.current;
+        return this.__exec__(false, 'GET', url, init);
     }
 
     /**
@@ -47,8 +45,7 @@ export default class FetchDao extends CrudDao {
      * @return {Promise<Response>} A `Promise` resolving to the `Response` object
      */
     update(url, init, dto) {
-        this.getChannelAction('PUT')(url, init, this.dtoToData(dto));
-        return this.dataStream.current;
+        return this.__exec__(false, 'PUT', url, init, dto);
     }
 
     /**
@@ -59,7 +56,6 @@ export default class FetchDao extends CrudDao {
      * @return {Promise<Response>} A `Promise` resolving to the `Response` object
      */
     delete(url, init) {
-        this.getChannelAction('DELETE')(url, init);
-        return this.dataStream.current;
+        return this.__exec__(false, 'DELETE', url, init);
     }
 }

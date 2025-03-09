@@ -10,7 +10,7 @@
  * - Imporove usage doc
  */
 
-import { CombinedDao, FetchJsonDao, BaseDto } from '../index.js';
+import { combinedDaoMixin, CrudDao, FetchJsonDao, BaseDto } from '../index.js';
 
 // import fetch from 'node-fetch';
 
@@ -71,7 +71,7 @@ class SposhDao extends FetchJsonDao {
     read() {
         return super.read('https://api.github.com/users/sposh/repos');
     }
-    dataToDtoParams(data) {
+    _dataToDtoParams(data) {
         return [data[0].full_name, data[0].owner.login];
     }
 }
@@ -83,14 +83,20 @@ class JaneDao extends FetchJsonDao {
     read() {
         return super.read('https://api.github.com/users/jane/repos');
     }
-    async dataToDtoParams(response) {
-        const json = (await super.dataToDtoParams(response))[0];
-        return [json[0].full_name, json[0].owner.login];
+    _dataToDtoParams(data) {
+        return [data[0].full_name, data[0].owner.login];
+    }
+}
+
+class SposhAndJaneDao extends combinedDaoMixin(CrudDao, SposhAndJane) {
+    #daos = { sposhDao: new SposhDao(), janeDao: new JaneDao()};
+    read() {
+        return this._combine([this.#daos.sposhDao.read(), this.#daos.janeDao.read()]);
     }
 }
 
 test('One from many pattern', async () => {
-    expect((await (new CombinedDao([new SposhDao(), new JaneDao()], SposhAndJane)).call('read')).toString()).toBe('SposhAndJane{ "sposh":Sposh{ "one":sposh/azurepoc, "two":sposh }, "jane":Jane{ "three":jane/alexa, "four":jane } }');
+    expect((await (new SposhAndJaneDao()).read().current).toString()).toBe('SposhAndJane{ "sposh":Sposh{ "one":sposh/azurepoc, "two":sposh }, "jane":Jane{ "three":jane/alexa, "four":jane } }');
 });
 
 /* TODO test('Many from one pattern', async () => {

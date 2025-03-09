@@ -11,26 +11,38 @@ test('Basic BaseDao', async () => {
             return this.#value;
         }
     };
+    class ChannelClass extends BaseChannel {
+        static get actions() {
+            return { PASSTHROUGH: 'passthrough' };
+        }
+        async passthrough(daoCallback, _key, _context, data) {
+            await daoCallback(`${data}`);
+            daoCallback(`${data}${data}`);
+        }
+    };
     const dao = new (class MyDao extends BaseDao {
         constructor() {
-            super(DtoClass);
+            super(DtoClass, ChannelClass);
         }
-        dtoToData(dto) {
+        _dtoToData(dto) {
             return dto.value;
         }
-        update(dto) {
-            this.getChannelAction('UPDATE')(this.dtoToData(dto));
-            return this.dataStream.current;
+        _dataToDtoParams(...data) {
+            return data;
         }
-        close() {
-            this.getChannelAction('CLOSE')();
+        update(dto) {
+            return this.__exec__(false, 'PASSTHROUGH', null, null, dto);
         }
     })();
-    expect(dao.dataStream.last).toBe(undefined);
     const dto = new DtoClass('i');
-    expect((await dao.update(dto)).value).toBe(dto.value);
-    expect(dao.dataStream.last.value).toBe(dto.value);
-    dao.close();
-    expect(dao.dataStream.current).toBe(null);
-    expect(dao.dataStream.last.value).toBe(dto.value);
+    const dataStream = dao.update(dto);
+    expect(dataStream.last).toBe(undefined);
+    expect((await dataStream.current).value).toBe(dto.value);
+    expect(dataStream.last.value).toBe(dto.value);
+    expect((await dataStream.current).value).toBe(`${dto.value}${dto.value}`);
+    expect(dataStream.last.value).toBe(`${dto.value}${dto.value}`);
+    // TODO Uncomment when we add dao.end
+    // dao.close();
+    // expect(dataStream.current).toBe(null);
+    // expect(dataStream.last.value).toBe(dto.value);
 });

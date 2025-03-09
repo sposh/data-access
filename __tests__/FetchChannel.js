@@ -3,10 +3,14 @@ import { FetchChannel } from '../index.js';
 
 // jest.mock('fetch'); // FIXME Use mock responses - throwing "require is not defined" error
 
+async function fetchCallback(response, id) {
+  expect((await response.json())[0].id).toBe(id);
+}
+
 test('Basic FetchChannel', async () => {
     const channel1 = new FetchChannel();
-    expect((await (await channel1.get('https://api.github.com/users/sposh/repos')).json())[0].id).toBe(696815904);
+    channel1.get(response => fetchCallback(response, 696815904), 'https://api.github.com/users/sposh/repos');
     const channel2 = new FetchChannel();
-    expect((await (await channel2.get('https://api.github.com/users/sposh/repos')).json())[0].id).toBe(696815904);
-    expect((await (await channel1.get('https://api.github.com/users/jane/repos')).json())[0].id).toBe(112634155);
+    channel2.get(response => fetchCallback(response, 696815904), 'https://api.github.com/users/sposh/repos');
+    channel1.get(response => fetchCallback(response, 112634155), 'https://api.github.com/users/jane/repos');
 });

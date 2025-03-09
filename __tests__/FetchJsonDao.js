@@ -5,8 +5,8 @@ import { FetchJsonDao } from '../index.js';
 
 test('Basic FetchJsonDao', async () => {
     const dao1 = new FetchJsonDao();
-    expect((await dao1.read('https://api.github.com/users/sposh/repos'))._params[0][0].id).toBe(696815904);
+    expect((await dao1.read('https://api.github.com/users/sposh/repos').current)._params[0][0].id).toBe(696815904);
     const dao2 = new FetchJsonDao();
-    expect((await dao2.read('https://api.github.com/users/sposh/repos'))._params[0][0].id).toBe(696815904);
-    expect((await dao1.read('https://api.github.com/users/jane/repos'))._params[0][0].id).toBe(112634155);
+    expect((await dao2.read('https://api.github.com/users/sposh/repos').current)._params[0][0].id).toBe(696815904);
+    expect((await dao1.read('https://api.github.com/users/jane/repos').current)._params[0][0].id).toBe(112634155);
 });
