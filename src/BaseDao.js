@@ -8,24 +8,22 @@ import BaseChannel from './BaseChannel.js';
 /**
  * Base data access object.
  */
-export default class BaseDao {
+export default class BaseDao extends DataStream {
     #dtoClass;
     #channel;
-    #dataStream;
     #refresh;
     #end;
 
-    constructor(dtoClass = BaseDto, channelClass = BaseChannel, ...params) {
+    constructor(dtoClass = BaseDto, channelClass = BaseChannel, ...channelParams) {
+        let refresh, end;
+        super(refreshSetup => refresh = refreshSetup, endSetup => end = endSetup);
+        this.#refresh = refresh;
+        this.#end = end;
         Object.defineProperty(this, '__exec__', {
-            value: (newDataStream, action, key, context, dto, ...params) => this.#exec(newDataStream, action, key, context, dto, ...params), // FIXME No protected classes in JS (but at least can be final)
+            value: (action, params, dto) => this.#exec(action, params, dto), // FIXME No protected classes in JS (but at least can be final)
         });
         this.#dtoClass = dtoClass;
-        this.#channel = createInstance(channelClass, ...params);
-        this.#newDataStream()
-    }
-
-    #newDataStream() {
-        this.#dataStream = new DataStream(refreshSetup => this.#refresh = refreshSetup, endSetup => this.#end = endSetup);
+        this.#channel = createInstance(channelClass, ...channelParams);
     }
 
     _dataToDtoParams(data) { // TODO JSDoc - return array or undefined // FIXME No protected classes in JS
@@ -42,23 +40,25 @@ export default class BaseDao {
         return await promise;
     }
 
-    #exec(newDataStream, action, key, context, dto, ...params) {
-        if (newDataStream) {
-            this.#newDataStream();
+    #update(data) {
+        if (this.#dtoClass) {
+            const dtoParams = this._dataToDtoParams(data);
+            this.#refresh(dtoParams ? createInstance(this.#dtoClass, ...dtoParams) : createInstance(this.#dtoClass));
         }
-        const refresh = this.#refresh;
+    };
+
+    #callback(dataOrPromise) {
         const end = this.#end;
-        const update = data => {
-            if (this.#dtoClass) {
-                const dtoParams = this._dataToDtoParams(data);
-                refresh(dtoParams ? createInstance(this.#dtoClass, ...dtoParams) : createInstance(this.#dtoClass));
-            }
-        };
-        if (Object.keys(this.#channel.constructor.actions).includes(action)) {
-            this.#channel[this.#channel.constructor.actions[action]].call(this.#channel, promise => {
-                return this._transformPromise(promise).then(data => update(data)).catch(reason => end(reason)); // TODO log reason; do we want to end?
-            }, key, context, this._dtoToData(dto), ...params);
+        if (typeof dataOrPromise?.then === 'function') { // TODO Create proper isPromise util
+            return this._transformPromise(dataOrPromise).then(data => this.#update(data)).catch(reason => end(reason)); // TODO log reason; do we want to end?
+        }
+        this.#update(dataOrPromise);
+    };
+
+    #exec(action, params, dto) {
+        if (typeof this.#channel[action] === 'function') {
+            this.#channel[action](this.#callback.bind(this), params, this._dtoToData(dto));
         } // else return undefined
-        return this.#dataStream;
+        return this;
     }
 }

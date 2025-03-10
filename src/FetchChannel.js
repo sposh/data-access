@@ -6,62 +6,61 @@ import logger from './logger.js';
 
 /**
  * Data channel object for HTTP[S] fetch.
- * @abstract
  * @implements CrudChannel
  */
 export default class FetchChannel extends BaseChannel {
-    static get actions() {
-        return { POST: 'post', GET: 'get', PUT: 'put', DELETE: 'delete' };
-    }
-
     /**
      * Perform a POST request to a HTTP[S] endpoint.
-     * @abstract
      * @param {URL} url Object creation endpoint
      * @param {Object} [init] Any custom settings that you want to apply to the request (optional)
      * @param {Object} value The body of the `Request` (the new object to create - optional)
      * @return {Promise<Response>} TODO
      */
-    post(daoCallback, url, init, value) {
+    post(callback, params, data) {
+        const url = params?.url;
+        const init = params?.init;
         logger.http(`post ${url}`);
-        handleData(fetch(url, { method: 'POST', body: value, ...init })).then(data => daoCallback(data));
+        callback(handleData(fetch(url, { method: 'POST', body: data, ...init })));
     }
 
     /**
      * Perform a GET request to a HTTP[S] endpoint.
-     * @abstract
      * @param {URL} url Object retrieval endpoint
      * @param {Object} [init] Any custom settings that you want to apply to the request (optional)
      * @return {Promise<Response>} TODO
      */
-    get(daoCallback, url, init) {
+    get(callback, params) {
+        const url = params?.url;
+        const init = params?.init;
         logger.http(`get ${url}`);
-        handleData(fetch(url, { method: 'GET', ...init })).then(data => daoCallback(data));
+        callback(handleData(fetch(url, { method: 'GET', ...init })));
     }
 
     /**
      * Perform a PUT request to a HTTP[S] endpoint.
-     * @abstract
      * @param {URL} url Object modification endpoint
      * @param {Object} [init] Any custom settings that you want to apply to the request (optional)
      * @param {Object} value The body of the `Request` (the new value - optional)
      * @return {Promise<Response>} TODO
      */
-    put(daoCallback, url, init, value) {
+    put(callback, params, data) {
+        const url = params?.url;
+        const init = params?.init;
         logger.http(`put ${url}`);
-        handleData(fetch(url, { method: 'PUT', body: value, ...init })).then(data => daoCallback(data));
+        callback(handleData(fetch(url, { method: 'PUT', body: data, ...init })));
     }
 
     /**
      * Perform a DELETE request to a HTTP[S] endpoint.
-     * @abstract
      * @param {URL} url Object deletion endpoint
      * @param {Object} [init] Any custom settings that you want to apply to the request (optional)
      * @return {Promise<Response>} TODO
      */
-    delete(daoCallback, url, init) {
+    delete(callback, params) {
+        const url = params?.url;
+        const init = params?.init;
         logger.http(`delete ${url}`);
-        handleData(fetch(url, { method: 'DELETE', ...init })).then(data => daoCallback(data));
+        callback(handleData(fetch(url, { method: 'DELETE', ...init })));
     }
 }
 

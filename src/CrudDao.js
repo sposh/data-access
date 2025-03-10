@@ -5,7 +5,7 @@ import BaseDao from './BaseDao.js'
 /**
  * Base data access object for CRUD operations.
  */
-export default class CrudDao extends BaseDao {
+export default class CrudDao extends BaseDao { // TODO Empty abstract - remove from inheritance chain?
     /**
      * Create a new object. Should *not* be idempotent.
      * @abstract
@@ -15,8 +15,8 @@ export default class CrudDao extends BaseDao {
      * @param {*} [value] The new object to create (optional)
      * @return {*} The created object, or `undefined` if object is not created
      */
-    create(key, context, dto) {
-        return this.__exec__(false, null, key, context, dto);
+    create(params, dto) {
+        return this.__exec__(null, params, dto);
     }
 
     /**
@@ -27,8 +27,8 @@ export default class CrudDao extends BaseDao {
      * @param {*} [context] Extra parameters or configuration (optional)
      * @return {*} The found object, or `undefined` if object is not found
      */
-    read(key, context) {
-        return this.__exec__(false, null, key, context);
+    read(params) {
+        return this.__exec__(null, params, null);
     }
 
     /**
@@ -40,8 +40,8 @@ export default class CrudDao extends BaseDao {
      * @param {*} value The new object (optional)
      * @return {*} The modified object, or `undefined` if object is not found
      */
-    update(key, context, dto) {
-        return this.__exec__(false, null, key, context);
+    update(params, dto) {
+        return this.__exec__(null, params, dto);
     }
 
     /**
@@ -52,7 +52,7 @@ export default class CrudDao extends BaseDao {
      * @param {*} [context] Extra parameters or configuration (optional)
      * @return {*} The deleted object, or `undefined` if object is not found
      */
-    delete(key, context) {
-        return this.__exec__(false, null, key, context);
+    delete(params) {
+        return this.__exec__(null, params, null);
     }
 }

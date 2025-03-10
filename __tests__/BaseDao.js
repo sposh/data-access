@@ -12,12 +12,9 @@ test('Basic BaseDao', async () => {
         }
     };
     class ChannelClass extends BaseChannel {
-        static get actions() {
-            return { PASSTHROUGH: 'passthrough' };
-        }
-        async passthrough(daoCallback, _key, _context, data) {
-            await daoCallback(`${data}`);
-            daoCallback(`${data}${data}`);
+        async doubleUpdate(callback, _params, data) {
+            callback(`${await data}`);
+            callback(`${await data}${await data}`);
         }
     };
     const dao = new (class MyDao extends BaseDao {
@@ -31,7 +28,7 @@ test('Basic BaseDao', async () => {
             return data;
         }
         update(dto) {
-            return this.__exec__(false, 'PASSTHROUGH', null, null, dto);
+            return this.__exec__('doubleUpdate', null, dto);
         }
     })();
     const dto = new DtoClass('i');
@@ -45,4 +42,4 @@ test('Basic BaseDao', async () => {
     // dao.close();
     // expect(dataStream.current).toBe(null);
     // expect(dataStream.last.value).toBe(dto.value);
-});
+}); // TODO test single/multiple datastream concurrency

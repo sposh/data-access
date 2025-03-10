@@ -17,12 +17,12 @@ export default class FetchDao extends CrudDao {
      * Perform a POST request to a HTTP[S] endpoint.
      * @override
      * @param {URL} url Object creation endpoint
-     * @param {Object} [init] Any custom settings that you want to apply to the request (optional)
+     * @param {Object} [params] Any custom settings that you want to apply to the request (optional)
      * @param {Object} value The body of the `Request` (the new object to create - optional)
      * @return {Promise<Response>} A `Promise` resolving to the `Response` object
      */
-    create(url, init, dto) {
-        return this.__exec__(false, 'POST', url, init, dto);
+    create(url, params, dto) {
+        return this.__exec__('post', { url, init: params }, dto);
     }
 
     /**
@@ -32,8 +32,8 @@ export default class FetchDao extends CrudDao {
      * @param {Object} [init] Any custom settings that you want to apply to the request (optional)
      * @return {Promise<Response>} A `Promise` resolving to the `Response` object
      */
-    read(url, init) {
-        return this.__exec__(false, 'GET', url, init);
+    read(url, params) {
+        return this.__exec__('get', { url, init: params });
     }
 
     /**
@@ -44,8 +44,8 @@ export default class FetchDao extends CrudDao {
      * @param {Object} value The body of the `Request` (the new value - optional)
      * @return {Promise<Response>} A `Promise` resolving to the `Response` object
      */
-    update(url, init, dto) {
-        return this.__exec__(false, 'PUT', url, init, dto);
+    update(url, params, dto) {
+        return this.__exec__('put', { url, init: params }, dto);
     }
 
     /**
@@ -55,7 +55,7 @@ export default class FetchDao extends CrudDao {
      * @param {Object} [init] Any custom settings that you want to apply to the request (optional)
      * @return {Promise<Response>} A `Promise` resolving to the `Response` object
      */
-    delete(url, init) {
-        return this.__exec__(false, 'DELETE', url, init);
+    delete(url, params) {
+        return this.__exec__('delete', { url, init: params });
     }
 }
